@@ -28,8 +28,9 @@ self.addEventListener("message", async (event) => {
 });
 
 self.addEventListener("push", async (event) => {
+  const message = await event.data.text();
   const notification = self.registration.showNotification(
-    "You'be been notified from the SW!"
+    message ?? "You'be been notified from the SW!"
   );
 
   // ensures the service worker stays active throughout the duration of the notification
