@@ -1,11 +1,10 @@
-
 body {
   padding: 1rem;
-  font-family: 'Lato', sans-serif;;
+  font-family: "Lato", sans-serif;
 }
 
 a {
-  color: #2D91F8;
+  color: #2d91f8;
   padding: 0.25rem 0.5rem;
   text-decoration: none;
 }
