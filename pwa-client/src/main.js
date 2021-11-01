@@ -1,7 +1,7 @@
 const applicationServerKey =
   "BJGPbhq3yM-8WYU4JT3v6P54unRkgCTu-Jdr0luSsZ6u0gbZTbwDE_lDZCuis0RuGJ_XPE3YsM83xCDEbJ01m48";
 
-async function main() {
+function initNotifications() {
   // dodgy grant notifications permissions
   if ("Notification" in window) {
     if (Notification.permission === "granted") {
@@ -15,6 +15,17 @@ async function main() {
     }
   }
 
+  function showNotification() {
+    const notification = new Notification("You've been notified!", {
+      body: "You should know what to do now.",
+      icon: "/warning.png",
+    });
+
+    notification.onclick = () => console.log("notification dismissed");
+  }
+}
+
+async function initServiceWorker() {
   if ("serviceWorker" in navigator) {
     let registration;
 
@@ -36,11 +47,13 @@ async function main() {
 
     if (serviceWorker.state === "activated") {
       serviceWorker.postMessage("Greetings from Client!");
+      initPushNotifications();
     } else {
       const onActivated = () => {
         if (serviceWorker.state === "activated") {
           serviceWorker.removeEventListener("statechange", onActivated);
           serviceWorker.postMessage("Greetings from Client!");
+          initPushNotifications();
         }
       };
       serviceWorker.addEventListener("statechange", onActivated);
@@ -50,32 +63,26 @@ async function main() {
       console.log("C: message received", { data: e.data });
     });
 
-    if (Notification.permission === "granted") {
-      try {
-        let subscription = await registration.pushManager.getSubscription();
+    async function initPushNotifications() {
+      if (Notification.permission === "granted") {
+        try {
+          let subscription = await registration.pushManager.getSubscription();
 
-        if (!subscription) {
-          subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey,
-          });
+          if (!subscription) {
+            subscription = await registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey,
+            });
+          }
+
+          console.log({ subscription: subscription.toJSON() });
+        } catch (error) {
+          console.error("C: subscription failed", { error });
         }
-
-        console.log({ subscription: subscription.toJSON() });
-      } catch (error) {
-        console.error("C: subscription failed", { error });
       }
     }
   }
 }
 
-const showNotification = () => {
-  const notification = new Notification("You've been notified!", {
-    body: "You should know what to do now.",
-    icon: "/warning.png",
-  });
-
-  notification.onclick = () => console.log("notification dismissed");
-};
-
-main();
+initNotifications();
+initServiceWorker();
