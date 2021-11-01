@@ -1,0 +1,11 @@
+{
+  "name": "pwa-concise",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Leon Coto <leoncoto@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "pwa-*"
+  ]
+}

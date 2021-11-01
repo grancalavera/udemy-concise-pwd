@@ -1,0 +1,13 @@
+{
+  "name": "pwa-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "notify": "node src/main.js",
+    "gen-keys": " web-push generate-vapid-keys --json > vapid.json"
+  },
+  "dependencies": {
+    "web-push": "3.4.5"
+  }
+}
