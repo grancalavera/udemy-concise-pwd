@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "serve src"
+    "start": "serve src",
+    "clean": "rm -rf ../docs",
+    "build": "yarn clean && cp -a src/. ../docs/"
   },
   "dependencies": {
     "serve": "12.0.1"
