@@ -8,5 +8,11 @@
   "workspaces": [
     "pwa-*",
     "giphygram-project"
-  ]
+  ],
+  "dependencies": {
+    "lighthouse": "8.6.0"
+  },
+  "scripts": {
+    "lighthouse": "yarn lighthouse https://grancalavera.github.io/udemy-concise-pwd/"
+  }
 }
