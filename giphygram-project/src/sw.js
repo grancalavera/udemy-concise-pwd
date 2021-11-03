@@ -1,4 +1,4 @@
-const version = "1.0";
+const version = "1.1";
 
 const appAssets = [
   "index.html",
@@ -21,8 +21,17 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
+  // application shell
   if (e.request.url.match(location.origin)) {
     e.respondWith(cacheWithNetworkFallback(`static-${version}`, e.request));
+
+    // api calls
+  } else if (e.request.url.match("api.giphy.com/v1/gifs/trending")) {
+    e.respondWith(networkWithCacheFallback(`static-${version}`, e.request));
+
+    // images sent from the API
+  } else if (e.request.url.match("giphy.com/media")) {
+    e.respondWith(cacheWithNetworkFallback("giphy", e.request));
   }
 });
 
@@ -46,6 +55,8 @@ async function cleanupCache() {
   );
 }
 
+// Cache strategies
+
 async function cacheWithNetworkFallback(cacheKey, request) {
   const cachedResponse = await caches.match(request);
   if (cachedResponse) {
@@ -55,5 +66,22 @@ async function cacheWithNetworkFallback(cacheKey, request) {
     const cache = await caches.open(cacheKey);
     await cache.put(request, networkResponse.clone());
     return networkResponse;
+  }
+}
+
+async function networkWithCacheFallback(cacheKey, request) {
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse.ok) {
+      // update the cache anyway, in case in the future the network would fail
+      const cache = await caches.open(cacheKey);
+      await cache.put(request, networkResponse.clone());
+      return networkResponse;
+    } else {
+      // handle errors in single place
+      throw new Error("Fetch Error");
+    }
+  } catch {
+    return caches.match(request);
   }
 }
