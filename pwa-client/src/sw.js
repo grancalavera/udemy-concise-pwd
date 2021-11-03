@@ -1,5 +1,5 @@
 // Service Worker
-const pwaCache = "pwa-cache-13";
+const pwaCache = "pwa-cache-16";
 
 // Static assets to cache on install
 const staticCache = [
