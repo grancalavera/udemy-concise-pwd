@@ -111,7 +111,7 @@ async function cacheAndNetworkRace(request) {
   return firstResponse;
 }
 
-async function cleanupCache() {
+async function cleanStaticCache() {
   const keys = await caches.keys();
 
   await Promise.all(
@@ -131,7 +131,7 @@ self.addEventListener("install", async (e) => {
 });
 
 self.addEventListener("activate", (e) => {
-  e.waitUntil(cleanupCache());
+  e.waitUntil(cleanStaticCache());
   console.log("SW: Activated");
 });
 

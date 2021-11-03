@@ -1,4 +1,4 @@
-const version = "1.1";
+const version = "1.3";
 
 const appAssets = [
   "index.html",
@@ -16,7 +16,7 @@ self.addEventListener("install", (e) => {
 });
 
 self.addEventListener("activate", (e) => {
-  e.waitUntil(cleanupCache());
+  e.waitUntil(cleanStaticCache());
   console.log("SW: Activated");
 });
 
@@ -35,6 +35,13 @@ self.addEventListener("fetch", (e) => {
   }
 });
 
+self.addEventListener("message", (e) => {
+  console.log({ data: e.data });
+  if (e.data.action === "cleanGiphyCache") {
+    cleanGiphyCache(e.data.giphys);
+  }
+});
+
 // pretty much the same as
 // https://developer.mozilla.org/en-US/docs/Web/API/ExtendableEvent/waitUntil#example
 async function preCache(key, assets) {
@@ -42,12 +49,26 @@ async function preCache(key, assets) {
   await cache.addAll(assets);
 }
 
-async function cleanupCache() {
+async function cleanStaticCache() {
   const keys = await caches.keys();
   await Promise.all(
     keys.map((key) => {
       if (key !== `static-${version}` && key.match("static-")) {
         return caches.delete(key);
+      } else {
+        return true;
+      }
+    })
+  );
+}
+
+async function cleanGiphyCache(giphys) {
+  const cache = await caches.open("giphy");
+  const keys = await cache.keys();
+  await Promise.all(
+    keys.map((key) => {
+      if (!giphys.includes(key.url)) {
+        return cache.delete(key);
       } else {
         return true;
       }
