@@ -1,4 +1,4 @@
-const version = "1.3";
+const version = "1.0";
 
 const appAssets = [
   "index.html",
@@ -36,7 +36,6 @@ self.addEventListener("fetch", (e) => {
 });
 
 self.addEventListener("message", (e) => {
-  console.log({ data: e.data });
   if (e.data.action === "cleanGiphyCache") {
     cleanGiphyCache(e.data.giphys);
   }
