@@ -1,0 +1,18 @@
+{
+  "name": "push-notis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:client": "serve client",
+    "start:server": "nodemon server/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.14",
+    "serve": "^13.0.2",
+    "web-push": "^3.4.5"
+  }
+}
