@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "node-storage": "^0.0.9",
     "nodemon": "^2.0.14",
     "serve": "^13.0.2",
     "web-push": "^3.4.5"

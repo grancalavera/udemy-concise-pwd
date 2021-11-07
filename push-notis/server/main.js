@@ -14,15 +14,23 @@ http
         .on("data", (chunk) => body.push(chunk))
         .on("end", () => {
           const subscription = JSON.parse(body.toString());
-          console.log({ subscription });
-          res.end("subscription done");
+          push.addSubscription(subscription);
+          res.statusCode = 201;
+          res.end();
         });
     }
 
     // Push
     else if (method === "POST" && url.match(/^\/push\/?/)) {
       const body = [];
-      req.on("data", (chunk) => body.push(chunk)).on("end", () => res.end("push done"));
+      req
+        .on("data", (chunk) => body.push(chunk))
+        .on("end", () => {
+          push.send(body.toString());
+          res.statusCode = 201;
+          res.end();
+        });
+
       // Get Keys
     } else if (method === "GET" && url.match(/^\/key\/?/)) {
       res.end(push.publicKey);
@@ -34,5 +42,5 @@ http
     }
   })
   .listen(9000, () => {
-    console.log("🖥 server is up in 9000");
+    console.log("🖥  server is up in port 9000");
   });

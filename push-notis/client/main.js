@@ -5,10 +5,6 @@ subscribeBtn.addEventListener("click", onToggleSubscription);
 
 let subscribed = false;
 
-function subscribe() {}
-
-function unsubscribe() {}
-
 async function onToggleSubscription(e) {
   if (subscribed) {
     unsubscribe();

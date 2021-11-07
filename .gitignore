@@ -130,3 +130,4 @@ dist
 
 vapid.json
 *.report.html
+db.json
